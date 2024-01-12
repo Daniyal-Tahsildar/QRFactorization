@@ -60,15 +60,17 @@ int main() {
   }
 
   auto matrices = poplin::experimental::createQRFactorizationMatrices(graph, FLOAT,{numRows}, {numCols}, "matrices" );
-  PrintTensor("matrices", matrices);
+  //PrintTensor("matrices", matrices);
 
   auto inStreamM = graph.addHostToDeviceFIFO("inputMatrix", FLOAT, numCols * numRows);
+  auto MatStream = graph.addHostToDeviceFIFO("matrices", FLOAT, numCols * numRows);
 
-  auto prog = Sequence({Copy(inStreamM, matrix), PrintTensor("matrix", matrix)});
+  auto prog = Sequence({Copy(inStreamM, matrix), Copy(MatStream, matrices), PrintTensor("matrix", matrix), PrintTensor("matrices", matrices)});
  
   Engine engine(graph, prog);
   engine.load(device);
   engine.connectStream("inputMatrix", hMatrix.data());
+  //engine.connectStream("inputMatrix", hMatrix.data());
 
  
   std::cout << "Running graph program to multiply matrix by vector\n";
