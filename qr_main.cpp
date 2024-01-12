@@ -63,9 +63,11 @@ int main() {
   //PrintTensor("matrices", matrices);
 
   auto inStreamM = graph.addHostToDeviceFIFO("inputMatrix", FLOAT, numCols * numRows);
-  auto MatStream = graph.addHostToDeviceFIFO("matrices", FLOAT, numCols * numRows);
+  auto MatStream_0 = graph.addHostToDeviceFIFO("matrices[0]", FLOAT, numCols * numRows);
+  auto MatStream_1 = graph.addHostToDeviceFIFO("matrices[1]", FLOAT, numCols * numRows);
 
-  auto prog = Sequence({Copy(inStreamM, matrix), Copy(matrices[0],MatStream), PrintTensor("matrix", matrix), PrintTensor("matrices", matrices[0])});
+  auto prog = Sequence({Copy(inStreamM, matrix), Copy(matrices[0],MatStream_0), Copy(matrices[1],MatStream_1),
+                             PrintTensor("matrix", matrix), PrintTensor("matrices[0]", matrices[0]), PrintTensor("matrices[0]", matrices[1])});
  
   Engine engine(graph, prog);
   engine.load(device);
