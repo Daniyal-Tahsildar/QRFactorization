@@ -45,12 +45,12 @@ int main() {
 
   // Create tensors in the graph to hold the input/output data.
   Tensor matrix = graph.addVariable(FLOAT, {numRows, numCols}, "matrix");
-  Tensor A = graph.addVariable(FLOAT, {numRows, numCols}, "A");
-  Tensor Q = graph.addVariable(FLOAT, {numRows, numCols}, "Q");
+  //Tensor A = graph.addVariable(FLOAT, {numRows, numCols}, "A");
+  //Tensor Q = graph.addVariable(FLOAT, {numRows, numCols}, "Q");
   
   poputil::mapTensorLinearly(graph, matrix);
-  graph.setTileMapping(A,0);
-  graph.setTileMapping(Q,0);
+ // graph.setTileMapping(A,0);
+  //graph.setTileMapping(Q,0);
 
   auto hMatrix = std::vector<float>(numRows * numCols);
 
@@ -60,7 +60,7 @@ int main() {
     }
   }
 
-  auto matrices = poplin::experimental::createQRFactorizationMatrices(graph, FLOAT,{numRows}, {numCols}, "matrices" );
+ // auto matrices = poplin::experimental::createQRFactorizationMatrices(graph, FLOAT,{numRows}, {numCols}, "matrices" );
 
   
   auto inStreamM = graph.addHostToDeviceFIFO("inputMatrix", FLOAT, numCols * numRows);
