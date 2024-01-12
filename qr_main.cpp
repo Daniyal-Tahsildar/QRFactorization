@@ -13,19 +13,6 @@ using namespace poplar;
 using namespace poplar::program;
 using namespace poplin;
 
- void printMatrix(std::string matrix_name, std::vector<float> matrix, int row, int col) {
-  std::cout << matrix_name << std::endl;
-
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) {
-
-    std::cout << std::fixed << matrix[i,j] << "\t";
-  
-    }
-  }
-  std::cout << std::endl;
-}
-
 int main() {
 
   unsigned numRows = 5;
@@ -73,8 +60,8 @@ int main() {
   }
 
   auto matrices = poplin::experimental::createQRFactorizationMatrices(graph, FLOAT,{numRows}, {numCols}, "matrices" );
-  printMatrix("matrices", matrices, numRows, numCols);
-  
+  PrintTensor("matrices", matrices);
+
   auto inStreamM = graph.addHostToDeviceFIFO("inputMatrix", FLOAT, numCols * numRows);
 
   auto prog = Sequence({Copy(inStreamM, matrix), PrintTensor("matrix", matrix)});
