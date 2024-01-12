@@ -60,7 +60,7 @@ int main() {
     }
   }
 
-  auto matrices = createQRFactorizationMatrices(graph, FLOAT,numRows, numCols );
+  auto matrices = createQRFactorizationMatrices(graph, FLOAT,{numRows}, {numCols}, "matrices" );
 
   
   auto inStreamM = graph.addHostToDeviceFIFO("inputMatrix", FLOAT, numCols * numRows);
