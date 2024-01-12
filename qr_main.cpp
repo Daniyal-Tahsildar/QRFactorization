@@ -43,14 +43,27 @@ int main() {
 
   std::cout << "Constructing compute graph and control program\n";
 
+  void printMatrix(std::string matrix_name, std::vector<float> matrix, int row, int col) {
+  std::cout << matrix_name << std::endl;
+
+  for (int i = 0; i < row; i++) {
+    for (int j = 0; j < col; j++) {
+
+    std::cout << std::fixed << matrix[i,j] << "\t";
+  
+    }
+  }
+  std::cout << std::endl;
+}
+
   // Create tensors in the graph to hold the input/output data.
   Tensor matrix = graph.addVariable(FLOAT, {numRows, numCols}, "matrix");
-  //Tensor A = graph.addVariable(FLOAT, {numRows, numCols}, "A");
-  //Tensor Q = graph.addVariable(FLOAT, {numRows, numCols}, "Q");
+  Tensor A = graph.addVariable(FLOAT, {numRows, numCols}, "A");
+  Tensor Q = graph.addVariable(FLOAT, {numRows, numCols}, "Q");
   
   poputil::mapTensorLinearly(graph, matrix);
- // graph.setTileMapping(A,0);
-  //graph.setTileMapping(Q,0);
+  graph.setTileMapping(A,0);
+  graph.setTileMapping(Q,0);
 
   auto hMatrix = std::vector<float>(numRows * numCols);
 
@@ -60,8 +73,8 @@ int main() {
     }
   }
 
- // auto matrices = poplin::experimental::createQRFactorizationMatrices(graph, FLOAT,{numRows}, {numCols}, "matrices" );
-
+  auto matrices = poplin::experimental::createQRFactorizationMatrices(graph, FLOAT,{numRows}, {numCols}, "matrices" );
+  printMatrix("matrices", matrices, numRows, numCols);
   
   auto inStreamM = graph.addHostToDeviceFIFO("inputMatrix", FLOAT, numCols * numRows);
 
